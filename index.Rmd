@@ -1,0 +1,38 @@
+---
+title: "Developing Data Product 2"
+author: "Alberto Macías"
+date: "5/12/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Videogames Average Sales 
+
+```{r, include=F}
+library(plotly)
+library(dplyr)
+```
+
+Data for this project can be download from [here](https://www.kaggle.com/gregorut/videogamesales).
+
+```{r, include=FALSE}
+vgsales <- read.csv("./data/vgsales.csv")
+vgs <- vgsales %>%
+            filter(Publisher=="Nintendo",Year>2005) %>%
+            select(Year, Genre, Global_Sales) %>%
+            group_by(Genre, Year) %>%
+            summarise(Sales=mean(Global_Sales))
+vgs$Year <- as.integer(vgs$Year)
+```
+```{r, warning=FALSE}
+fig <- plot_ly(vgs, x = ~Year, y= ~Sales, mode="lines", type = "scatter", color = ~Genre) %>%
+            layout(
+            title="Average Global Sales of Nintendo Games by Genre: 2005-2016"
+            )
+fig
+```
+
+
